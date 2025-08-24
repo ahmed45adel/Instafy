@@ -1,14 +1,24 @@
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import Loader from "@/components/shared/Loader";
+import { useToast } from "@/components/ui/use-toast";
+
 import { SigninValidation } from "@/lib/validation";
+import { useSignInAccount } from "@/lib/react-query/queries";
+import { useUserContext } from "@/context/AuthContext";
 
 const SigninForm = () => {
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
+
+  const { mutateAsync: signInAccount, isLoading } = useSignInAccount();
 
   const form = useForm<z.infer<typeof SigninValidation>>({
     resolver: zodResolver(SigninValidation),
@@ -17,6 +27,28 @@ const SigninForm = () => {
       password: "",
     },
   });
+
+  const handleSignin = async (user: z.infer<typeof SigninValidation>) => {
+    const session = await signInAccount(user);
+
+    if (!session) {
+      toast({ title: "Login failed. Please try again." });
+      
+      return;
+    }
+
+    const isLoggedIn = await checkAuthUser();
+
+    if (isLoggedIn) {
+      form.reset();
+
+      navigate("/");
+    } else {
+      toast({ title: "Login failed. Please try again.", });
+      
+      return;
+    }
+  };
 
   return (
     <Form {...form}>
@@ -28,7 +60,7 @@ const SigninForm = () => {
           Welcome back! Please enter your details.
         </p>
         <form
-          onSubmit={()=>console.log(form.formState)}
+          onSubmit={form.handleSubmit(handleSignin)}
           className="flex flex-col gap-5 w-full mt-4">
           <FormField
             control={form.control}
@@ -59,7 +91,13 @@ const SigninForm = () => {
           />
 
           <Button type="submit" className="shad-button_primary">
-              Log in
+            {isLoading || isUserLoading ? (
+              <div className="flex-center gap-2">
+                <Loader /> Loading...
+              </div>
+            ) : (
+              "Log in"
+            )}
           </Button>
 
           <p className="text-small-regular text-light-2 text-center mt-2">
