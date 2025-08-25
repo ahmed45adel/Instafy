@@ -12,6 +12,7 @@ import {
   FormLabel,
   FormMessage,
   Textarea,
+  Input,
 } from "@/components/ui";
 import { PostValidation } from "@/lib/validation";
 
@@ -62,6 +63,20 @@ const PostForm = ({ post }: PostFormProps) => {
               <FormLabel className="shad-form_label">Add Photos</FormLabel>
               <FormControl>
                 <FileUploader />
+              </FormControl>
+              <FormMessage className="shad-form_message" />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="location"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="shad-form_label">Add Location</FormLabel>
+              <FormControl>
+                <Input type="text" className="shad-input" {...field} />
               </FormControl>
               <FormMessage className="shad-form_message" />
             </FormItem>
