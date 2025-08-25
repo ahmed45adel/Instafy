@@ -2,6 +2,7 @@ import * as z from "zod";
 import { Models } from "appwrite";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { FileUploader } from "@/components/shared";
 
 import {
   Form,
@@ -47,6 +48,20 @@ const PostForm = ({ post }: PostFormProps) => {
                   className="shad-textarea custom-scrollbar"
                   {...field}
                 />
+              </FormControl>
+              <FormMessage className="shad-form_message" />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="file"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="shad-form_label">Add Photos</FormLabel>
+              <FormControl>
+                <FileUploader />
               </FormControl>
               <FormMessage className="shad-form_message" />
             </FormItem>
