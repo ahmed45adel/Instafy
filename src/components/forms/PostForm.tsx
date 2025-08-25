@@ -13,6 +13,7 @@ import {
   FormMessage,
   Textarea,
   Input,
+  Button,
 } from "@/components/ui";
 import { PostValidation } from "@/lib/validation";
 
@@ -82,7 +83,7 @@ const PostForm = ({ post }: PostFormProps) => {
             </FormItem>
           )}
         />
-        
+
         <FormField
           control={form.control}
           name="tags"
@@ -103,6 +104,18 @@ const PostForm = ({ post }: PostFormProps) => {
             </FormItem>
           )}
         />
+                <div className="flex gap-4 items-center justify-end">
+          <Button
+            type="button"
+            className="shad-button_dark_4">
+              cancel
+          </Button>
+          <Button
+            type="submit"
+            className="shad-button_primary whitespace-nowrap">
+              submit
+          </Button>
+        </div>
       </form>
     </Form>
   );
