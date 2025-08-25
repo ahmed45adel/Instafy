@@ -1,0 +1,60 @@
+import * as z from "zod";
+import { Models } from "appwrite";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Textarea,
+} from "@/components/ui";
+import { PostValidation } from "@/lib/validation";
+
+type PostFormProps = {
+  post?: Models.Document;
+  action: "Create" | "Update";
+};
+
+const PostForm = ({ post }: PostFormProps) => {
+  const form = useForm<z.infer<typeof PostValidation>>({
+    resolver: zodResolver(PostValidation),
+    defaultValues: {
+      caption: post ? post?.caption : "",
+      file: [],
+      location: post ? post.location : "",
+      tags: post ? post.tags.join(",") : "",
+    },
+  });
+
+
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={()=> console.log(form)}
+        className="flex flex-col gap-9 w-full  max-w-5xl">
+        <FormField
+          control={form.control}
+          name="caption"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="shad-form_label">Caption</FormLabel>
+              <FormControl>
+                <Textarea
+                  className="shad-textarea custom-scrollbar"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage className="shad-form_message" />
+            </FormItem>
+          )}
+        />
+      </form>
+    </Form>
+  );
+};
+
+export default PostForm;
