@@ -1,10 +1,19 @@
 import { useParams } from "react-router-dom";
+
+import { Loader } from "@/components/shared";
 import PostForm from "@/components/forms/PostForm";
 import { useGetPostById } from "@/lib/react-query/queries";
 
 const EditPost = () => {
   const { id } = useParams();
   const { data: post, isLoading } = useGetPostById(id);
+
+  if (isLoading)
+    return (
+      <div className="flex-center w-full h-full">
+        <Loader />
+      </div>
+    );
 
   return (
     <div className="flex flex-1">
@@ -20,7 +29,7 @@ const EditPost = () => {
           <h2 className="h3-bold md:h2-bold text-left w-full">Edit Post</h2>
         </div>
 
-        {isLoading ? <div>loading...</div> : <PostForm action="Update" post={post} />}
+        {isLoading ? <Loader /> : <PostForm action="Update" post={post} />}
       </div>
     </div>
   );
