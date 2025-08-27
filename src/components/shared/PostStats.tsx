@@ -3,8 +3,12 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 import { checkIsLiked } from "@/lib/utils";
-import { useGetCurrentUser } from "@/lib/react-query/queries";
-import { deleteSavedPost } from "@/lib/appwrite/api";
+import {
+  useLikePost,
+  useSavePost,
+  useDeleteSavedPost,
+  useGetCurrentUser,
+} from "@/lib/react-query/queries";
 
 type PostStatsProps = {
   post: Models.Document;
@@ -17,6 +21,10 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
 
   const [likes, setLikes] = useState<string[]>(likesList);
   const [isSaved, setIsSaved] = useState(false);
+
+  const { mutate: likePost } = useLikePost();
+  const { mutate: savePost } = useSavePost();
+  const { mutate: deleteSavePost } = useDeleteSavedPost();
 
   const { data: currentUser } = useGetCurrentUser();
 
@@ -42,6 +50,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
     }
 
     setLikes(likesArray);
+    likePost({ postId: post.$id, likesArray });
   };
 
   const handleSavePost = (
@@ -51,9 +60,10 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
 
     if (savedPostRecord) {
       setIsSaved(false);
-      return deleteSavedPost(savedPostRecord.$id);
+      return deleteSavePost(savedPostRecord.$id);
     }
 
+    savePost({ userId: userId, postId: post.$id });
     setIsSaved(true);
   };
 
