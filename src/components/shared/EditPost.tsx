@@ -1,6 +1,11 @@
+import { useParams } from "react-router-dom";
 import PostForm from "@/components/forms/PostForm";
+import { useGetPostById } from "@/lib/react-query/queries";
 
 const EditPost = () => {
+  const { id } = useParams();
+  const { data: post, isLoading } = useGetPostById(id);
+
   return (
     <div className="flex flex-1">
       <div className="common-container">
@@ -15,7 +20,7 @@ const EditPost = () => {
           <h2 className="h3-bold md:h2-bold text-left w-full">Edit Post</h2>
         </div>
 
-        <PostForm action="Update" />
+        {isLoading ? <div>loading...</div> : <PostForm action="Update" post={post} />}
       </div>
     </div>
   );
