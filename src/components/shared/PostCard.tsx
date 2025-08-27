@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import { multiFormatDateString } from "@/lib/utils";
 import { useUserContext } from "@/context/AuthContext";
+import PostStats from "./PostStats";
 
 type PostCardProps = {
   post: Models.Document;
