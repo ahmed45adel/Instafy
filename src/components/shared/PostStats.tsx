@@ -1,13 +1,62 @@
 import { Models } from "appwrite";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 import { checkIsLiked } from "@/lib/utils";
+import { useGetCurrentUser } from "@/lib/react-query/queries";
+import { deleteSavedPost } from "@/lib/appwrite/api";
 
 type PostStatsProps = {
   post: Models.Document;
   userId: string;
 };
 
-const PostStats = ({ userId }: PostStatsProps) => {
+const PostStats = ({ post, userId }: PostStatsProps) => {
+  const location = useLocation();
+  const likesList = post.likes.map((user: Models.Document) => user.$id);
+
+  const [likes, setLikes] = useState<string[]>(likesList);
+  const [isSaved, setIsSaved] = useState(false);
+
+  const { data: currentUser } = useGetCurrentUser();
+
+  const savedPostRecord = currentUser?.save.find(
+    (record: Models.Document) => record.post.$id === post.$id
+  );
+
+  useEffect(() => {
+    setIsSaved(!!savedPostRecord);
+  }, [currentUser]);
+
+  const handleLikePost = (
+    e: React.MouseEvent<HTMLImageElement, MouseEvent>
+  ) => {
+    e.stopPropagation();
+
+    let likesArray = [...likes];
+
+    if (likesArray.includes(userId)) {
+      likesArray = likesArray.filter((Id) => Id !== userId);
+    } else {
+      likesArray.push(userId);
+    }
+
+    setLikes(likesArray);
+  };
+
+  const handleSavePost = (
+    e: React.MouseEvent<HTMLImageElement, MouseEvent>
+  ) => {
+    e.stopPropagation();
+
+    if (savedPostRecord) {
+      setIsSaved(false);
+      return deleteSavedPost(savedPostRecord.$id);
+    }
+
+    setIsSaved(true);
+  };
+
   const containerStyles = location.pathname.startsWith("/profile")
     ? "w-full"
     : "";
@@ -18,7 +67,7 @@ const PostStats = ({ userId }: PostStatsProps) => {
       <div className="flex gap-2 mr-5">
         <img
           src={`${
-            checkIsLiked(userId)
+            checkIsLiked(likes, userId)
               ? "/assets/icons/liked.svg"
               : "/assets/icons/like.svg"
           }`}
