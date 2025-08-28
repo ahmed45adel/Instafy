@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { createPost, createUserAccount, deleteSavedPost, getCurrentUser, getUserById, likePost, savePost, signInAccount, updatePost } from "@/lib/appwrite/api";
+import { createPost, createUserAccount, deleteSavedPost, getCurrentUser, getPostById, 
+  getUserById, likePost, savePost, signInAccount, updatePost } from "@/lib/appwrite/api";
 import { INewPost, INewUser, IUpdatePost } from "@/types";
 import { QUERY_KEYS } from "./queryKeys";
 
@@ -130,5 +131,13 @@ export const useUpdatePost = () => {
         queryKey: [QUERY_KEYS.GET_POST_BY_ID, data?.$id],
       });
     },
+  });
+};
+
+export const useGetPostById = (postId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_POST_BY_ID, postId],
+    queryFn: () => getPostById(postId),
+    enabled: !!postId,
   });
 };
