@@ -1,6 +1,7 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui";
+import { Loader } from "@/components/shared";
 import { PostStats } from "@/components/shared";
 
 import {
@@ -14,6 +15,7 @@ const PostDetails = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { user } = useUserContext();
+
   const { data: post, isLoading } = useGetPostById(id);
   const { mutate: deletePost } = useDeletePost();
   const handleDeletePost = () => {
@@ -37,6 +39,10 @@ const PostDetails = () => {
           <p className="small-medium lg:base-medium">Back</p>
         </Button>
       </div>
+
+      {isLoading || !post ? (
+        <Loader />
+      ) : (
         <div className="post_details-card">
           <img
             src={post?.imageUrl}
