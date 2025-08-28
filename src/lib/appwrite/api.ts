@@ -357,3 +357,21 @@ export async function deletePost(postId?: string, imageId?: string) {
     console.log(error);
   }
 }
+
+export async function getPostById(postId?: string) {
+  if (!postId) throw Error;
+
+  try {
+    const post = await databases.getDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.postCollectionId,
+      postId
+    );
+
+    if (!post) throw Error;
+
+    return post;
+  } catch (error) {
+    console.log(error);
+  }
+}
