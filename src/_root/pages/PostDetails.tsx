@@ -2,10 +2,11 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui";
 import { Loader } from "@/components/shared";
-import { PostStats } from "@/components/shared";
+import { GridPostList, PostStats } from "@/components/shared";
 
 import {
   useGetPostById,
+  useGetUserPosts,
   useDeletePost,
 } from "@/lib/react-query/queries";
 import { multiFormatDateString } from "@/lib/utils";
@@ -17,7 +18,13 @@ const PostDetails = () => {
   const { user } = useUserContext();
 
   const { data: post, isLoading } = useGetPostById(id);
+  const { data: userPosts, isLoading: isUserPostLoading } = useGetUserPosts(
+    post?.creator.$id
+  );
   const { mutate: deletePost } = useDeletePost();
+
+  const relatedPosts = userPosts?.documents;
+
   const handleDeletePost = () => {
     deletePost({ postId: id, imageId: post?.imageId });
     navigate(-1);
@@ -135,6 +142,11 @@ const PostDetails = () => {
         <h3 className="body-bold md:h3-bold w-full my-10">
           More Related Posts
         </h3>
+        {isUserPostLoading || !relatedPosts ? (
+          <Loader />
+        ) : (
+          <GridPostList posts={relatedPosts} />
+        )}
       </div>
     </div>
   );
