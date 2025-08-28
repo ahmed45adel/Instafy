@@ -1,9 +1,9 @@
 import { Models } from "appwrite";
 import { Link } from "react-router-dom";
 
+import { PostStats } from "@/components/shared";
 import { multiFormatDateString } from "@/lib/utils";
 import { useUserContext } from "@/context/AuthContext";
-import PostStats from "./PostStats";
 
 type PostCardProps = {
   post: Models.Document;
@@ -11,6 +11,8 @@ type PostCardProps = {
 
 const PostCard = ({ post }: PostCardProps) => {
   const { user } = useUserContext();
+
+  if (!post.creator) return;
 
   return (
     <div className="post-card">
@@ -54,6 +56,7 @@ const PostCard = ({ post }: PostCardProps) => {
           />
         </Link>
       </div>
+
       <Link to={`/posts/${post.$id}`}>
         <div className="small-medium lg:base-medium py-5">
           <p>{post.caption}</p>
@@ -72,7 +75,8 @@ const PostCard = ({ post }: PostCardProps) => {
           className="post-card_img"
         />
       </Link>
-      <PostStats userId={user.id} />
+
+      <PostStats post={post} userId={user.id} />
     </div>
   );
 };
