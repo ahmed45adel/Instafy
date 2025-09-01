@@ -102,6 +102,7 @@ export async function signOutAccount() {
     console.log(error);
   }
 }
+
 export async function uploadFile(file: File) {
   try {
     const uploadedFile = await storage.createFile(
