@@ -8,6 +8,7 @@ import {
   Profile,
   EditPost,
   PostDetails,
+  UpdateProfile,
   AllUsers,
 } from "@/_root/pages";
 import AuthLayout from "./_auth/AuthLayout";
@@ -38,6 +39,7 @@ const App = () => {
           <Route path="/update-post/:id" element={<EditPost />} />
           <Route path="/posts/:id" element={<PostDetails />} />
           <Route path="/profile/:id/*" element={<Profile />} />
+          <Route path="/update-profile/:id" element={<UpdateProfile />} />
         </Route>
       </Routes>
 
