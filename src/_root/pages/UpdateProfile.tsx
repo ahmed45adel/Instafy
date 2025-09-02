@@ -10,8 +10,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui";
-import { ProfileUploader } from "@/components/shared";
+import { Textarea, Input, Button } from "@/components/ui";
+import { ProfileUploader, Loader } from "@/components/shared";
 import { ProfileValidation } from "@/lib/validation";
 import { useUserContext } from "@/context/AuthContext";
 import { useGetUserById, useUpdateUser } from "@/lib/react-query/queries";
@@ -32,7 +32,7 @@ const UpdateProfile = () => {
 
   // Queries
   const { data: currentUser } = useGetUserById(id || "");
-  const { mutateAsync: updateUser } =
+  const { mutateAsync: updateUser, isLoading: isLoadingUpdate } =
     useUpdateUser();
 
   const handleUpdate = async (value: z.infer<typeof ProfileValidation>) => {
@@ -137,6 +137,39 @@ const UpdateProfile = () => {
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="bio"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="shad-form_label">Bio</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      className="shad-textarea custom-scrollbar"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage className="shad-form_message" />
+                </FormItem>
+              )}
+            />
+
+            <div className="flex gap-4 items-center justify-end">
+              <Button
+                type="button"
+                className="shad-button_dark_4"
+                onClick={() => console.log('cancel')}>
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                className="shad-button_primary whitespace-nowrap"
+                disabled={isLoadingUpdate}>
+                {isLoadingUpdate && <Loader />}
+                Update Profile
+              </Button>
+            </div>
           </form>
         </Form>
       </div>
