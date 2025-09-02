@@ -11,6 +11,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useToast } from "@/components/ui/use-toast";
 import { Textarea, Input, Button } from "@/components/ui";
 import { ProfileUploader, Loader } from "@/components/shared";
 
@@ -18,7 +19,9 @@ import { ProfileValidation } from "@/lib/validation";
 import { useUserContext } from "@/context/AuthContext";
 import { useGetUserById, useUpdateUser } from "@/lib/react-query/queries";
 
-const UpdateProfile = () => {  const navigate = useNavigate();
+const UpdateProfile = () => {
+  const { toast } = useToast();
+  const navigate = useNavigate();
   const { id } = useParams();
   const { user, setUser } = useUserContext();
   const form = useForm<z.infer<typeof ProfileValidation>>({
@@ -54,6 +57,13 @@ const UpdateProfile = () => {  const navigate = useNavigate();
       imageUrl: currentUser.imageUrl,
       imageId: currentUser.imageId,
     });
+
+    if (!updatedUser) {
+      toast({
+        title: `Update user failed. Please try again.`,
+      });
+    }
+
     setUser({
       ...user,
       name: updatedUser?.name,
