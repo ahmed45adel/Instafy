@@ -1,6 +1,6 @@
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createPost, createUserAccount, deletePost, deleteSavedPost, getCurrentUser, getInfinitePosts, getPostById, 
-  getRecentPosts, getUserById, getUserPosts, likePost, savePost, searchPosts, signInAccount, 
+  getRecentPosts, getUserById, getUserPosts, getUsers, likePost, savePost, searchPosts, signInAccount, 
   signOutAccount, updatePost, 
   updateUser} from "@/lib/appwrite/api";
 
@@ -202,5 +202,12 @@ export const useUpdateUser = () => {
         queryKey: [QUERY_KEYS.GET_USER_BY_ID, data?.$id],
       });
     },
+  });
+};
+
+export const useGetUsers = (limit?: number) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_USERS],
+    queryFn: () => getUsers(limit),
   });
 };
