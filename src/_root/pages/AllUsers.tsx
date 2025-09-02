@@ -2,14 +2,19 @@ import { Loader, UserCard } from "@/components/shared";
 import { useGetUsers } from "@/lib/react-query/queries";
 
 const AllUsers = () => {
+  const { data: creators, isLoading, isError: isErrorCreators } = useGetUsers();
 
-  const { data: creators } = useGetUsers();
+  if (isErrorCreators) {
+    console.log('something bad happened')
+    
+    return;
+  }
 
   return (
     <div className="common-container">
       <div className="user-container">
         <h2 className="h3-bold md:h2-bold text-left w-full">All Users</h2>
-        {!creators ? (
+        {isLoading && !creators ? (
           <Loader />
         ) : (
           <ul className="user-grid">
