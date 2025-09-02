@@ -2,14 +2,15 @@ import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "react-router-dom";
-
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui";
 import { ProfileUploader } from "@/components/shared";
 import { ProfileValidation } from "@/lib/validation";
 import { useUserContext } from "@/context/AuthContext";
@@ -34,7 +35,6 @@ const UpdateProfile = () => {
   const { mutateAsync: updateUser } =
     useUpdateUser();
 
-  // Handler
   const handleUpdate = async (value: z.infer<typeof ProfileValidation>) => {
     const updatedUser = await updateUser({
       userId: currentUser.$id,
@@ -82,6 +82,58 @@ const UpdateProfile = () => {
                     />
                   </FormControl>
                   <FormMessage className="shad-form_message" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="shad-form_label">Name</FormLabel>
+                  <FormControl>
+                    <Input type="text" className="shad-input" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="shad-form_label">Username</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      className="shad-input"
+                      {...field}
+                      disabled
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="shad-form_label">Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      className="shad-input"
+                      {...field}
+                      disabled
+                    />
+                  </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
