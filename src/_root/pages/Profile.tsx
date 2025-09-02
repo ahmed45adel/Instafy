@@ -4,6 +4,7 @@ import {
   Link,
   Outlet,
   useParams,
+  useLocation,
 } from "react-router-dom";
 
 import { Button } from "@/components/ui";
@@ -12,9 +13,11 @@ import { useUserContext } from "@/context/AuthContext";
 import { useGetUserById } from "@/lib/react-query/queries";
 import { GridPostList, Loader } from "@/components/shared";
 
+
 const Profile = () => {
   const { id } = useParams();
   const { user } = useUserContext();
+  const { pathname } = useLocation();
 
   const { data: currentUser } = useGetUserById(id || "");
 
@@ -76,6 +79,38 @@ const Profile = () => {
           </div>
         </div>
       </div>
+
+      {currentUser.$id === user.id && (
+        <div className="flex max-w-5xl w-full">
+          <Link
+            to={`/profile/${id}`}
+            className={`profile-tab rounded-l-lg ${
+              pathname === `/profile/${id}` && "!bg-dark-3"
+            }`}>
+            <img
+              src={"/assets/icons/posts.svg"}
+              alt="posts"
+              width={20}
+              height={20}
+            />
+            Posts
+          </Link>
+          <Link
+            to={`/profile/${id}/liked-posts`}
+            className={`profile-tab rounded-r-lg ${
+              pathname === `/profile/${id}/liked-posts` && "!bg-dark-3"
+            }`}>
+            <img
+              src={"/assets/icons/like.svg"}
+              alt="like"
+              width={20}
+              height={20}
+            />
+            Liked Posts
+          </Link>
+        </div>
+      )}
+
       <Routes>
         <Route
           index
